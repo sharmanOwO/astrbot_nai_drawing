@@ -1,0 +1,77 @@
+{
+  "model": {
+    "type": "object",
+    "description": "NovelAI V5 Full 生图参数",
+    "items": {
+      "api_key": { "type": "string", "description": "NovelAI Persistent API Token", "hint": "从 NovelAI Account 页面获取；仅用于官方 image.novelai.net 接口", "default": "", "secret": true },
+      "width": { "type": "int", "description": "宽度", "default": 832 },
+      "height": { "type": "int", "description": "高度", "default": 1216 },
+      "steps": { "type": "int", "description": "步数", "default": 23 },
+      "scale": { "type": "float", "description": "CFG Scale", "default": 5.0 },
+      "seed": { "type": "string", "description": "默认种子", "hint": "留空时每次随机；/naiset seed 可在会话中固定或恢复随机", "default": "" },
+      "sampler": { "type": "string", "description": "采样器", "default": "k_euler_ancestral" },
+      "noise_schedule": { "type": "string", "description": "噪声调度器", "default": "karras" },
+      "cfg_rescale": { "type": "float", "description": "CFG Rescale", "default": 0.0, "slider": { "min": 0.0, "max": 1.0, "step": 0.01 } },
+      "sm": { "type": "bool", "description": "启用 SMEA", "default": false },
+      "sm_dyn": { "type": "bool", "description": "启用 SMEA Dynamic", "default": false },
+      "n_samples": { "type": "int", "description": "单次生成数量", "hint": "消息只发送返回包中的第一张图，建议保持为 1", "default": 1 },
+      "i2i_strength": { "type": "float", "description": "图生图强度", "default": 0.6, "slider": { "min": 0.01, "max": 0.99, "step": 0.01 } },
+      "i2i_noise": { "type": "float", "description": "图生图噪点", "default": 0.0, "slider": { "min": 0.0, "max": 1.0, "step": 0.01 } },
+      "dynamic_thresholding": { "type": "bool", "description": "Dynamic Thresholding", "default": false },
+      "controlnet_strength": { "type": "float", "description": "ControlNet Strength", "default": 1.0 },
+      "legacy": { "type": "bool", "description": "Legacy", "default": false },
+      "add_original_image": { "type": "bool", "description": "Add Original Image", "default": true },
+      "legacy_v3_extend": { "type": "bool", "description": "Legacy V3 Extend", "default": false },
+      "skip_cfg_above_sigma": { "type": "string", "description": "Skip CFG Above Sigma", "hint": "留空时传 null", "default": "" },
+      "use_order": { "type": "bool", "description": "角色提示词顺序", "hint": "可由 /naiset use_order True 或 False 在会话中覆盖", "default": false },
+      "custom_prompt_add": { "type": "text", "description": "全局正面提示词", "hint": "实际顺序为全局正面提示词 → 画师预设 → 用户提示词", "default": "" },
+      "negative_prompt_add": { "type": "text", "description": "全局负面提示词", "hint": "写入 v4_negative_prompt.caption.base_caption", "default": "" },
+      "artist_presets": {
+        "type": "template_list",
+        "description": "公共画师预设导入",
+        "hint": "启动时写入 presets.json，之后用 artist = 预设名 或 a = 预设名引用",
+        "templates": { "artist_preset": { "name": "画师预设", "items": {
+          "name": { "description": "预设名称", "type": "string", "default": "" },
+          "prompt": { "description": "画师提示词", "type": "text", "default": "" }
+        } } }
+      }
+    }
+  },
+  "prompt_generator": {
+    "type": "object",
+    "description": "自然语言转英文标签",
+    "items": {
+      "provider_id": { "type": "string", "description": "提示词生成 Provider", "default": "", "_special": "select_provider" },
+      "temperature": { "type": "float", "description": "生成温度", "default": 0.2 },
+      "max_tokens": { "type": "int", "description": "最大 Tokens", "default": 220 },
+      "output_format": { "type": "string", "description": "输出格式", "default": "text", "options": ["text", "json"] },
+      "enforce_tag_order": { "type": "bool", "description": "标签排序", "default": false },
+      "prompt_template": { "type": "text", "description": "自定义提示词模板", "default": "", "editor_mode": true, "editor_language": "markdown" }
+    }
+  },
+  "permissions": { "type": "object", "description": "命令白名单", "items": {
+    "user_whitelist": { "type": "list", "description": "/naiset 和 /publicpreset 用户白名单", "hint": "填写用户 ID；为空时任何用户都不能执行这两个命令", "default": [] }
+  } },
+  "admin": { "type": "object", "description": "管理员模式", "items": {
+    "admin_users": { "type": "list", "description": "插件管理员列表", "default": [] },
+    "default_admin_mode": { "type": "bool", "description": "默认管理员模式", "default": false }
+  } },
+  "auto_recall": { "type": "object", "description": "自动撤回", "items": {
+    "enabled": { "type": "bool", "description": "默认启用自动撤回", "default": false },
+    "delay_seconds": { "type": "int", "description": "撤回延迟秒数", "default": 100 },
+    "allowed_groups": { "type": "list", "description": "撤回允许的会话键列表", "default": [] }
+  } },
+  "nsfw_filter": { "type": "object", "description": "NSFW 过滤", "items": {
+    "enabled": { "type": "bool", "description": "默认启用 NSFW 过滤", "default": false },
+    "filter_tags": { "type": "string", "description": "负面过滤标签", "default": "{{{{{nsfw}}}}}" }
+  } },
+  "prompt_show": { "type": "object", "description": "提示词显示", "items": {
+    "enabled": { "type": "bool", "description": "默认显示最终提示词", "default": false }
+  } },
+  "custom_prompt": { "type": "object", "description": "自定义系统提示", "items": {
+    "system_prompt": { "type": "text", "description": "自定义系统提示词", "default": "", "editor_mode": true, "editor_language": "markdown" }
+  } },
+  "components": { "type": "object", "description": "开发调试", "items": {
+    "enable_debug_info": { "type": "bool", "description": "输出调试信息", "default": false }
+  } }
+}

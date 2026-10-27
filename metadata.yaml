@@ -1,0 +1,9 @@
+name: astrbot_nai_drawing
+display_name: NovelAI_Drawing
+desc: 基于 NovelAI 官方 API 的 AstrBot 绘图插件，支持文生图、图生图、会话参数、预设和提示词历史。
+version: 1.0.0
+author: sharmanOwO
+support_platforms:
+  - aiocqhttp
+astrbot_version: ">=4.11,<5"
+repo: https://github.com/sharmanOwO/astrbot_nai_drawing
